@@ -482,12 +482,10 @@ const deletePerson = (listaForm) => {
 // Agrega una persona a la lista y actualiza la tabla
 const addPerson = (dataItem) => {
   const item = getlistaFormAsObject(dataItem);
-
   callServiceXHR(item, (response) => {
     console.log('response', response)
-    console.log("con la respuesta exito genero el nuevo registro");
-    loaderContainer.classList.add('hide');
-    listaForm.classList.remove('hide');
+    
+
     if (response?.id) {
       const personObject =
       "altMax" in item && "autonomia" in item
@@ -507,9 +505,14 @@ const addPerson = (dataItem) => {
             item.cantPue,
             item.cantRue
           );
-  
+      
       vehicle.push(personObject);
+      console.log("regenero la tabla");
       uploadDataTable(vehicle);
+      
+      console.log("oculto loader muestro tabla");
+      loaderContainer.classList.add('hide');
+      listaForm.classList.remove('hide');
     }
   })
 
@@ -517,7 +520,7 @@ const addPerson = (dataItem) => {
 
 // Maneja el envío del formulario de ABM
 const handleAbmFormSubmit = (e) => {
-  console.log("entre a handlebm");
+  console.log("entre a handleAbmFormSubmit");
   e.preventDefault();
   const clickedButton = document.querySelector('button[type="submit"]:focus');
   const buttonId = clickedButton.id;
@@ -703,10 +706,11 @@ async function callServiceFetchAsync(body, method) {
 }
 
 const callServiceXHR = (body, callback) => {
-  const xhr = new XMLHttpRequest();
   console.log("instancio el xhr");
+  const xhr = new XMLHttpRequest();
   xhr.open("PUT", endpoint, true);
   xhr.setRequestHeader("Content-Type", "application/json");
+  console.log("Oculto form y muestro loader");
   listaForm.classList.add('hide');
   loaderContainer.classList.remove('hide');
 
@@ -716,5 +720,5 @@ const callServiceXHR = (body, callback) => {
       callback(JSON.parse(xhr.responseText))
     }
   };
-  xhr.send(JSON.stringify(body));
+  xhr.send(JSON.stringify(body)); // convierte la solicitud a un body en formato json 
 }
